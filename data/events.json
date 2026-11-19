@@ -10,7 +10,21 @@
    "exclude": []
   }
  ],
- "manualLeaves": [],
+ "manualLeaves": [
+  {
+   "name": "최지현",
+   "tracks": [
+    "B3"
+   ],
+   "type": "보상휴가",
+   "start": "2026-11-25",
+   "end": "2026-11-25",
+   "from": null,
+   "to": null,
+   "purpose": null,
+   "note": "결재 중(UWIN 반영 시 이 항목 삭제)"
+  }
+ ],
  "timetable": [],
  "holidays": [
   "2026-12-25",
