@@ -170,6 +170,10 @@
   .tag { display:inline-block; font-size:11.5px; padding:1px 8px; border-radius:999px; margin-right:8px; font-weight:700; vertical-align:1px; }
   .tag.trip, .tag.leave { background:var(--t); color:var(--ink); box-shadow:inset 0 0 0 1px var(--c); }
 
+  .trackbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 14px; }
+  .trackbar .seg { display:inline-flex; }
+  .trackbar .seg button { height:36px; padding:0 18px; font-size:14px; }
+  .trackbar .who { font-size:12.5px; color:var(--muted); }
   @media (max-width:900px) {
     main { padding:22px 14px 40px; }
     .week { min-height:104px; }
@@ -181,6 +185,7 @@
     .calcard { padding:14px 12px; border-radius:18px; }
     .dow, #weeks { display:none; }
     .seg { display:none; }
+    .trackbar .seg { display:inline-flex; }
     #agenda { display:flex; flex-direction:column; gap:10px; }
     .bar-head h2 { font-size:19px; }
     .legend { width:100%; }
@@ -194,11 +199,20 @@
   <div class="top">
     <div>
       <h1>총괄기획본부 일정판</h1>
-      <p class="tagline">출장 · 연가 · 행사를 한눈에</p>
+      <p class="tagline">평생교육 · 탄소중립 — 출장 · 연가 · 행사를 한눈에</p>
     </div>
     <div class="pills" id="pills"></div>
   </div>
   <div id="banners"></div>
+
+  <div class="trackbar">
+    <div class="seg" id="trackSeg" role="group" aria-label="일정 구분">
+      <button type="button" data-track="all" aria-pressed="true">전체</button>
+      <button type="button" data-track="C1" aria-pressed="false">평생교육</button>
+      <button type="button" data-track="B3" aria-pressed="false">탄소중립</button>
+    </div>
+    <span class="who" id="trackWho"></span>
+  </div>
 
   <section class="calcard">
     <div class="bar-head">
@@ -218,7 +232,7 @@
     <div id="weekview"></div>
     <div id="rangeNote" class="note" style="display:none"></div>
   </section>
-  <footer>출장·연가는 UWIN 부재 정보(이름·구분·날짜·시간, 일부 출장은 출장목적), 행사는 총괄기획본부 주간보고 기준입니다. 날짜를 누르면 세부 내용이 열립니다. 검색엔진에 노출되지 않도록 설정돼 있습니다.</footer>
+  <footer>출장·연가는 UWIN 부재 정보(이름·구분·날짜·시간, 일부 출장은 출장목적), 행사는 총괄기획본부·기업지원R&D센터 주간보고 기준입니다. 이상욱·장준민·조인주는 두 소속에 모두 속해 두 보기 모두에 나타납니다. 날짜를 누르면 세부 내용이 열립니다. 검색엔진에 노출되지 않도록 설정돼 있습니다.</footer>
 </main>
 
 <div class="scrim" id="scrim"></div>
@@ -253,6 +267,7 @@
   var items = {};               // 날짜 → 그날의 항목 (드로어·목록용)
   var spans = [];               // 막대용: {kind,start,end,label,time,range}
   var selected = null;
+  var track = 'all';            // 보기 구분: all(전체) · C1(평생교육) · B3(탄소중립)
   var ORDER = { event: 0, trip: 1, leave: 2 };
 
   function add(k, it) { (items[k] = items[k] || []).push(it); }
@@ -646,24 +661,50 @@
     if (timetables.length) $('ttLabel').textContent = timetables[0].label || '수업시간표';
     else $('ttWrap').style.display = 'none';
     $('ttOn').checked = ttOn;
-    var events = (ev.events || []).concat(expandRecurring(ev));
-    ((uwin && uwin.events) || []).concat(ev.manualLeaves || []).forEach(function (e) {
-      var kind = e.type === '출장' ? 'trip' : 'leave';
-      var linked = events.filter(function (x) {
-        return e.type === '출장' && (x.who || []).indexOf(e.name) >= 0 && x.date <= e.end && (x.endDate || x.date) >= e.start;
+    var TRACK_NAME = { all: '', C1: '평생교육', B3: '탄소중립' };
+    var TRACK_TAG = { C1: '[평생] ', B3: '[탄소] ' };
+    var TRACK_WHO = {
+      C1: '평생교육 · 이상욱 · 유화숙 · 장준민 · 조인주 · 김정연 · 천아름',
+      B3: '탄소중립 · 이상욱 · 장준민 · 이운호 · 조인주 · 윤순영 · 김근아 · 최지현'
+    };
+    function inTrack(t) {              // t: 'all' | 'C1' | 'B3' | ['C1','B3'] | 없음(=모두)
+      if (track === 'all' || t == null || t === 'all') return true;
+      return Array.isArray(t) ? t.indexOf(track) >= 0 : t === track;
+    }
+    var allEvents = (ev.events || []).concat(expandRecurring(ev));
+    var allLeaves = ((uwin && uwin.events) || []).concat(ev.manualLeaves || []);
+    function rebuild() {
+      items = {}; spans = [];
+      var events = allEvents.filter(function (x) { return inTrack(x.track); });
+      allLeaves.filter(function (e) { return inTrack(e.tracks); }).forEach(function (e) {
+        var kind = e.type === '출장' ? 'trip' : 'leave';
+        var linked = events.filter(function (x) {
+          return e.type === '출장' && (x.who || []).indexOf(e.name) >= 0 && x.date <= e.end && (x.endDate || x.date) >= e.start;
+        });
+        var sp = { kind: kind, start: e.start, end: e.end, label: '(' + e.type + ') ' + e.name, time: e.from ? e.from + '~' + e.to : '', range: e.start !== e.end ? md(e.start) + '~' + md(e.end) : '' };
+        spans.push(sp);
+        eachDay(e.start, e.end, function (k) { add(k, { kind: kind, e: e, linked: linked, sp: sp }); });
       });
-      var sp = { kind: kind, start: e.start, end: e.end, label: '(' + e.type + ') ' + e.name, time: e.from ? e.from + '~' + e.to : '', range: e.start !== e.end ? md(e.start) + '~' + md(e.end) : '' };
-      spans.push(sp);
-      eachDay(e.start, e.end, function (k) { add(k, { kind: kind, e: e, linked: linked, sp: sp }); });
-    });
-    events.forEach(function (x) {
-      var end = x.endDate || x.date;
-      var sp = { kind: 'event', start: x.date, end: end, label: x.title, time: x.time || '', range: end !== x.date ? md(x.date) + '~' + md(end) : '' };
-      spans.push(sp);
-      eachDay(x.date, end, function (k) { add(k, { kind: 'event', x: x, sp: sp }); });
+      events.forEach(function (x) {
+        var end = x.endDate || x.date;
+        var tag = track === 'all' && TRACK_TAG[x.track] ? TRACK_TAG[x.track] : '';
+        var sp = { kind: 'event', start: x.date, end: end, label: tag + x.title, time: x.time || '', range: end !== x.date ? md(x.date) + '~' + md(end) : '' };
+        spans.push(sp);
+        eachDay(x.date, end, function (k) { add(k, { kind: 'event', x: x, sp: sp }); });
+      });
+    }
+    function setTrack(t, keepOpen) {
+      track = t; try { localStorage.setItem('track', t); } catch (e) {}
+      Array.prototype.forEach.call($('trackSeg').querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-track') === t)); });
+      $('trackWho').textContent = TRACK_WHO[t] || '';
+      rebuild(); render();
+    }
+    Array.prototype.forEach.call($('trackSeg').querySelectorAll('button'), function (b) {
+      b.addEventListener('click', function () { setTrack(b.getAttribute('data-track')); });
     });
     rangeTo = uwin ? uwin.rangeTo : null;
-    render();
+    var saved = 'all'; try { saved = localStorage.getItem('track') || 'all'; } catch (e) {}
+    setTrack(TRACK_NAME[saved] !== undefined ? saved : 'all');
   });
   render();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { render(); });
