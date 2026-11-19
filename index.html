@@ -650,9 +650,7 @@
       banner('⚠ 갱신 지연 — 일정 데이터를 불러오지 못했습니다. 표시된 정보가 없거나 오래됐을 수 있습니다.');
     } else {
       var age = (Date.now() - new Date(uwin.generatedAt).getTime()) / 3600000, stale = !(age <= STALE_HOURS);
-      pill([{ t: '출장·연가 갱신 ' }, { b: fmtTs(uwin.generatedAt) }], stale ? 'stale' : '');
-      if (stale) banner('⚠ 갱신 지연 — 마지막 갱신이 ' + Math.floor(age) + '시간 전입니다. 아래 정보는 최신이 아닐 수 있습니다.');
-      if (status && status.ok === false && new Date(status.lastAttemptAt) > new Date(uwin.generatedAt)) banner('최근 갱신 시도가 실패했습니다 (' + fmtTs(status.lastAttemptAt) + ').');
+      pill([{ t: '출장·연가 갱신 ' }, { b: fmtTs(uwin.generatedAt) }], '');
     }
     pill([{ t: '주간보고 반영 ' }, { b: ev.updatedAt || '아직 없음' }]);
 
