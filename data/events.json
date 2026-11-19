@@ -17,12 +17,25 @@
     "B3"
    ],
    "type": "보상휴가",
+   "start": "2026-11-06",
+   "end": "2026-11-06",
+   "from": "11:00",
+   "to": "18:00",
+   "purpose": null,
+   "note": "수동 입력(UWIN 반영 시 삭제)"
+  },
+  {
+   "name": "최지현",
+   "tracks": [
+    "B3"
+   ],
+   "type": "보상휴가",
    "start": "2026-11-25",
    "end": "2026-11-25",
-   "from": null,
-   "to": null,
+   "from": "09:00",
+   "to": "14:00",
    "purpose": null,
-   "note": "결재 중(UWIN 반영 시 이 항목 삭제)"
+   "note": "수동 입력(UWIN 반영 시 삭제)"
   }
  ],
  "timetable": [],
