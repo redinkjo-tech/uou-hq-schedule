@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>총괄기획본부 일정판</title>
+<title>센터 일정판</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
   :root {
@@ -198,7 +198,7 @@
 <main>
   <div class="top">
     <div>
-      <h1>총괄기획본부 일정판</h1>
+      <h1>센터 일정판</h1>
       <p class="tagline">평생교육 · 탄소중립 — 출장 · 연가 · 행사를 한눈에</p>
     </div>
     <div class="pills" id="pills"></div>
@@ -211,7 +211,6 @@
       <button type="button" data-track="C1" aria-pressed="false">평생교육</button>
       <button type="button" data-track="B3" aria-pressed="false">탄소중립</button>
     </div>
-    <span class="who" id="trackWho"></span>
   </div>
 
   <section class="calcard">
@@ -696,7 +695,6 @@
     function setTrack(t, keepOpen) {
       track = t; try { localStorage.setItem('track', t); } catch (e) {}
       Array.prototype.forEach.call($('trackSeg').querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-track') === t)); });
-      $('trackWho').textContent = TRACK_WHO[t] || '';
       rebuild(); render();
     }
     Array.prototype.forEach.call($('trackSeg').querySelectorAll('button'), function (b) {
