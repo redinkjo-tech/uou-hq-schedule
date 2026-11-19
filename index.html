@@ -704,6 +704,7 @@
     });
     rangeTo = uwin ? uwin.rangeTo : null;
     var saved = 'all'; try { saved = localStorage.getItem('track') || 'all'; } catch (e) {}
+    var hh = (location.hash || '').replace('#', ''); if (TRACK_NAME[hh] !== undefined) saved = hh;   // 주소 끝에 #C1 · #B3 를 붙이면 그 보기로 연다
     setTrack(TRACK_NAME[saved] !== undefined ? saved : 'all');
   });
   render();
