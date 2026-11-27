@@ -1,7 +1,5 @@
 {
-    "lastAttemptAt":  "2026-11-27T02:07:08.4203839Z",
-    "ok":  false,
-    "code":  "node.exe : 수집 실패: UWIN 탭 없음(디버그 크롬 확인)\r",
-    "message":  "UWIN 탭이 열려 있지 않습니다. 열린 크롬 창에서 UWIN에 로그인한 뒤 다시 누르세요.",
-    "fix":  "login"
+ "lastAttemptAt": "2026-11-27T02:18:52.450Z",
+ "ok": true,
+ "code": null
 }
