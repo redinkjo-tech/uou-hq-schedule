@@ -72,7 +72,12 @@
   @media (max-width:900px) { .tv-cols { grid-template-columns:minmax(0,1fr); } }
   .tv-card { background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:16px 18px; }
   .tv-card h3 { margin:0 0 10px; font-size:15px; font-weight:800; }
-  .tv-item { display:block; width:100%; text-align:left; border:0; background:var(--soft); border-radius:10px; padding:9px 12px; margin:0 0 8px; cursor:pointer; }
+  .tv-item { display:flex; align-items:center; gap:8px; background:var(--soft); border-radius:10px; padding:9px 8px 9px 12px; margin:0 0 8px; }
+  .tv-item .go { flex:1; min-width:0; text-align:left; border:0; background:transparent; padding:0; cursor:pointer; }
+  .tv-item .ok { flex:none; border:1px solid var(--line); background:var(--card); color:var(--brand); font-size:12.5px; font-weight:700; border-radius:8px; padding:5px 10px; cursor:pointer; }
+  .tv-item .ok:hover { background:var(--brand-soft); }
+  .tv-item.done { opacity:.6; }
+  .tv-restore { border:0; background:transparent; color:var(--muted); font-size:12.5px; font-weight:600; padding:4px 0 8px; cursor:pointer; text-decoration:underline; }
   .tv-item .d { font-size:12px; color:var(--muted); font-weight:600; }
   .tv-item .t { font-size:14px; font-weight:600; margin-top:1px; }
   .tv-item .k { display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; border-radius:6px; margin-right:6px; background:var(--event); color:var(--event-ink); }
@@ -765,7 +770,7 @@
       var age = (Date.now() - new Date(uwin.generatedAt).getTime()) / 3600000, stale = !(age <= STALE_HOURS);
       pill([{ t: '출장·연가 갱신 ' }, { b: fmtTs(uwin.generatedAt) }], '');
     }
-    pill([{ t: '주간보고 반영 ' }, { b: ev.updatedAt || '아직 없음' }]);
+    pill([{ t: '주간보고 반영 ' }, { b: ev.updatedAt ? String(ev.updatedAt).replace(/\s*\([^)]*\)\s*$/, '') : '아직 없음' }]);   // "(주간보고 11/23 기준)" 같은 괄호 설명은 표시하지 않음
 
     timetables = ev.timetable || []; holidays = ev.holidays || [];
     if (timetables.length) $('ttLabel').textContent = timetables[0].label || '수업시간표';
@@ -819,23 +824,45 @@
       var uc = unreadCount(); if (uc) { $('teamsBadge').textContent = uc > 99 ? '99+' : String(uc); $('teamsBadge').hidden = false; }
     }
     function fmtMsgTime(s) { var d = new Date(s); return pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + ' (' + DOW[d.getDay()] + ') ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+    // 완료 처리한 일정·제출 안내(이 PC에만 저장). 같은 메시지·같은 날짜면 다시 띄우지 않는다.
+    var doneSet = {}, showDone = false;
+    try { doneSet = JSON.parse(localStorage.getItem('teamsDone') || '{}') || {}; } catch (e) {}
+    function doneKey(t) { return (t.msgId || t.title) + '|' + t.date; }
+    function saveDone() { try { localStorage.setItem('teamsDone', JSON.stringify(doneSet)); } catch (e) {} }
     function renderTeams() {
       if (!haveTeams) return;
       $('teamsUpd').textContent = (teams.updatedAt ? '읽은 시각 ' + fmtTs(teams.updatedAt) : '') + (tstatus && tstatus.ok === false ? ' · ⚠ ' + (tstatus.message || '읽기 실패') : '');
       Array.prototype.forEach.call($('roomSeg').querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-room') === room)); });
       var flagBy = {}; (teams.items || []).forEach(function (t) { if (t.msgId) flagBy[t.msgId] = t; });
       var box = $('tvItems'); box.textContent = '';
-      var its = (teams.items || []).filter(function (t) { return room === 'all' || t.room === room; }).sort(function (a, b) { return a.date.localeCompare(b.date); });
-      if (!its.length) box.appendChild(el('div', 'tv-empty', '날짜가 있는 일정·제출 안내가 없습니다.'));
+      var allIts = (teams.items || []).filter(function (t) { return room === 'all' || t.room === room; }).sort(function (a, b) { return a.date.localeCompare(b.date); });
+      var its = allIts.filter(function (t) { return !doneSet[doneKey(t)]; });
+      var doneN = allIts.length - its.length;
+      if (!its.length) box.appendChild(el('div', 'tv-empty', allIts.length ? '모두 완료했습니다.' : '날짜가 있는 일정·제출 안내가 없습니다.'));
       its.forEach(function (t) {
-        var b = el('button', 'tv-item'); b.type = 'button';
+        var row = el('div', 'tv-item'), b = el('button', 'go'); b.type = 'button';
         b.appendChild(el('div', 'd', md(t.date) + (t.endDate && t.endDate !== t.date ? '~' + md(t.endDate) : '') + (t.time ? ' ' + t.time : '') + ' · ' + (ROOM_NAME[t.room] || '')));
         var tt = el('div', 't'); tt.appendChild(el('span', 'k' + (t.kind === 'deadline' ? ' deadline' : ''), t.kind === 'deadline' ? '마감' : '일정')); tt.appendChild(document.createTextNode(t.title)); b.appendChild(tt);
         b.addEventListener('click', function () { setTrack('all'); var dd = new Date(t.date + 'T12:00:00'); view.y = dd.getFullYear(); view.m = dd.getMonth(); weekStart = sundayOf(t.date); render(); openDrawer(t.date); });
-        box.appendChild(b);
+        var ok = el('button', 'ok', '완료'); ok.type = 'button'; ok.title = '완료 처리(목록에서 숨김)';
+        ok.addEventListener('click', function () { doneSet[doneKey(t)] = 1; saveDone(); renderTeams(); });
+        row.appendChild(b); row.appendChild(ok);
+        box.appendChild(row);
       });
+      if (doneN) {
+        var rb = el('button', 'tv-restore', '완료한 항목 ' + doneN + '건 ' + (showDone ? '숨기기' : '보기')); rb.type = 'button';
+        rb.addEventListener('click', function () { showDone = !showDone; renderTeams(); });
+        box.appendChild(rb);
+        if (showDone) allIts.filter(function (t) { return doneSet[doneKey(t)]; }).forEach(function (t) {
+          var row = el('div', 'tv-item done'), g = el('div', 'go');
+          g.appendChild(el('div', 'd', md(t.date) + ' · ' + (ROOM_NAME[t.room] || ''))); g.appendChild(el('div', 't', t.title)); row.appendChild(g);
+          var un = el('button', 'ok', '되돌리기'); un.type = 'button';
+          un.addEventListener('click', function () { delete doneSet[doneKey(t)]; saveDone(); renderTeams(); });
+          row.appendChild(un); box.appendChild(row);
+        });
+      }
       var mb = $('tvMsgs'); mb.textContent = '';
-      var ms = (teams.messages || []).filter(function (m) { return room === 'all' || m.room === room; }).slice(0, 80);
+      var ms = (teams.messages || []).filter(function (m) { return room === 'all' || m.room === room; }).slice(0, 5);   // 최근 5개만
       if (!ms.length) mb.appendChild(el('div', 'tv-empty', '메시지가 없습니다.'));
       ms.forEach(function (m) {
         var w = el('div', 'tv-msg'), h = el('div', 'h');
