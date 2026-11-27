@@ -297,7 +297,6 @@
       <div class="tv-card"><h3>최근 메시지</h3><div id="tvMsgs"></div></div>
     </div>
   </section>
-  <footer>출장·연가는 UWIN, 행사는 총괄기획본부·기업지원R&D센터 주간보고 기준입니다. 날짜를 누르면 세부 내용이 열립니다.</footer>
 </main>
 
 <div class="scrim" id="scrim"></div>
@@ -789,13 +788,13 @@
     // 팀즈에서 뽑은 일정·제출 안내도 달력에 올린다(내 PC 위젯에서만). 모든 보기(전체·평생교육·탄소중립)에 표시.
     var ROOM_NAME = { chief: '앵커사업단 책임', group: '앵커사업단 단체팀즈' };
     var teamEvents = ((teams && teams.items) || []).map(function (t) {
-      return { title: (t.kind === 'deadline' ? '[팀즈·마감] ' : '[팀즈] ') + t.title, date: t.date, endDate: t.endDate, time: t.time, track: 'all', desc: t.note, teams: { room: ROOM_NAME[t.room] || t.room, url: t.url } };
+      return { title: (t.kind === 'deadline' ? '[팀즈·마감] ' : '[팀즈] ') + t.title, date: t.date, endDate: t.endDate, time: t.time, track: 'all', desc: t.note, teams: { room: ROOM_NAME[t.room] || t.room, url: t.url, key: (t.msgId || t.title) + '|' + t.date } };
     });
     var allEvents = (ev.events || []).concat(expandRecurring(ev)).concat(teamEvents);
     var allLeaves = ((uwin && uwin.events) || []).concat(ev.manualLeaves || []);
     function rebuild() {
       items = {}; spans = [];
-      var events = allEvents.filter(function (x) { return inTrack(x.track); });
+      var events = allEvents.filter(function (x) { return inTrack(x.track) && !(x.teams && doneSet[x.teams.key]); });   // 완료 처리한 팀즈 일정은 달력에서도 뺀다
       allLeaves.filter(function (e) { return inTrack(e.tracks); }).forEach(function (e) {
         var kind = e.type === '출장' ? 'trip' : 'leave';
         var linked = events.filter(function (x) {
@@ -845,7 +844,7 @@
         var tt = el('div', 't'); tt.appendChild(el('span', 'k' + (t.kind === 'deadline' ? ' deadline' : ''), t.kind === 'deadline' ? '마감' : '일정')); tt.appendChild(document.createTextNode(t.title)); b.appendChild(tt);
         b.addEventListener('click', function () { setTrack('all'); var dd = new Date(t.date + 'T12:00:00'); view.y = dd.getFullYear(); view.m = dd.getMonth(); weekStart = sundayOf(t.date); render(); openDrawer(t.date); });
         var ok = el('button', 'ok', '완료'); ok.type = 'button'; ok.title = '완료 처리(목록에서 숨김)';
-        ok.addEventListener('click', function () { doneSet[doneKey(t)] = 1; saveDone(); renderTeams(); });
+        ok.addEventListener('click', function () { doneSet[doneKey(t)] = 1; saveDone(); rebuild(); renderTeams(); });
         row.appendChild(b); row.appendChild(ok);
         box.appendChild(row);
       });
@@ -857,7 +856,7 @@
           var row = el('div', 'tv-item done'), g = el('div', 'go');
           g.appendChild(el('div', 'd', md(t.date) + ' · ' + (ROOM_NAME[t.room] || ''))); g.appendChild(el('div', 't', t.title)); row.appendChild(g);
           var un = el('button', 'ok', '되돌리기'); un.type = 'button';
-          un.addEventListener('click', function () { delete doneSet[doneKey(t)]; saveDone(); renderTeams(); });
+          un.addEventListener('click', function () { delete doneSet[doneKey(t)]; saveDone(); rebuild(); renderTeams(); });
           row.appendChild(un); box.appendChild(row);
         });
       }
