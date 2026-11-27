@@ -1,2 +1,5 @@
 tools/
 *.log
+# 팀즈 메시지는 공개 저장소에 올리지 않는다(내 PC의 위젯에서만 읽음)
+data/teams.json
+data/teams-*.json

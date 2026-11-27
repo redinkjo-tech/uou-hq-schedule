@@ -47,6 +47,50 @@
   .pill.stale .dot { background:var(--warn); }
   .banner { margin:0 0 14px; padding:12px 16px; border-radius:12px; font-size:14px; background:var(--warn-bg); color:var(--warn); font-weight:600; }
 
+  [hidden] { display:none !important; }
+  @media (max-width:640px) { .tv-head .seg { display:inline-flex; } }
+  /* 위젯 전용: 새로고침 버튼 · 오류 배너 버튼 */
+  .rbtn { display:none; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; border:1px solid var(--line); background:var(--card); color:var(--muted); cursor:pointer; box-shadow:var(--shadow); padding:0; }
+  .rbtn.on { display:inline-flex; }
+  .rbtn:hover { color:var(--ink); }
+  .rbtn svg { width:17px; height:17px; }
+  .rbtn.spin svg { animation:spin 1s linear infinite; }
+  .rbtn:disabled { cursor:default; opacity:.7; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .banner .acts { display:inline-flex; gap:8px; margin-left:12px; vertical-align:middle; }
+  .banner .acts button { border:1px solid currentColor; background:transparent; color:inherit; border-radius:8px; padding:3px 10px; font-size:12.5px; font-weight:600; cursor:pointer; }
+  .banner.ok { background:var(--brand-soft); color:var(--brand); }
+
+  /* 팀즈 탭 (내 PC 위젯에서만 보임) */
+  .seg button .badge { display:inline-block; min-width:18px; height:18px; line-height:18px; margin-left:6px; padding:0 5px; border-radius:9px; background:var(--sun); color:#fff; font-size:11px; font-weight:700; text-align:center; vertical-align:1px; }
+  #teamsView { display:none; }
+  #teamsView.on { display:block; }
+  .tv-head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .tv-head h2 { margin:0; font-size:22px; font-weight:800; letter-spacing:-0.03em; flex:1; min-width:140px; }
+  .tv-head .upd { font-size:12.5px; color:var(--muted); }
+  .tv-cols { display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr); gap:16px; align-items:start; }
+  @media (max-width:900px) { .tv-cols { grid-template-columns:minmax(0,1fr); } }
+  .tv-card { background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:16px 18px; }
+  .tv-card h3 { margin:0 0 10px; font-size:15px; font-weight:800; }
+  .tv-item { display:block; width:100%; text-align:left; border:0; background:var(--soft); border-radius:10px; padding:9px 12px; margin:0 0 8px; cursor:pointer; }
+  .tv-item .d { font-size:12px; color:var(--muted); font-weight:600; }
+  .tv-item .t { font-size:14px; font-weight:600; margin-top:1px; }
+  .tv-item .k { display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; border-radius:6px; margin-right:6px; background:var(--event); color:var(--event-ink); }
+  .tv-item .k.deadline { background:var(--warn-bg); color:var(--warn); }
+  .tv-msg { padding:12px 0; border-top:1px solid var(--line); }
+  .tv-msg:first-child { border-top:0; padding-top:2px; }
+  .tv-msg .h { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:12.5px; color:var(--muted); }
+  .tv-msg .h b { color:var(--ink); font-size:14px; }
+  .tv-msg .room { font-size:11px; font-weight:700; padding:1px 7px; border-radius:6px; background:var(--soft); color:var(--muted); }
+  .tv-msg .new { width:8px; height:8px; border-radius:50%; background:var(--sun); display:inline-block; }
+  .tv-msg .flag { font-size:11px; font-weight:700; padding:1px 7px; border-radius:6px; background:var(--event); color:var(--event-ink); }
+  .tv-msg .flag.deadline { background:var(--warn-bg); color:var(--warn); }
+  .tv-msg .x { margin-top:4px; white-space:pre-wrap; word-break:keep-all; overflow-wrap:anywhere; font-size:14px; max-height:9.5em; overflow:hidden; }
+  .tv-msg .x.open { max-height:none; }
+  .tv-msg .more { border:0; background:transparent; color:var(--brand); font-weight:600; font-size:12.5px; padding:2px 0; cursor:pointer; }
+  .tv-msg a { color:var(--brand); font-size:12.5px; font-weight:600; margin-left:8px; }
+  .tv-empty { color:var(--muted); font-size:14px; padding:18px 0; }
+
   /* 달력 카드 */
   .calcard { background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:18px 18px 14px; }
   .bar-head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
@@ -201,7 +245,7 @@
       <h1>센터 일정판</h1>
       <p class="tagline">평생교육 · 탄소중립 — 출장 · 연가 · 행사를 한눈에</p>
     </div>
-    <div class="pills" id="pills"></div>
+    <div class="pills" id="pills"><button type="button" class="rbtn" id="uwinBtn" title="UWIN 출장·연가 지금 갱신" aria-label="UWIN 출장·연가 지금 갱신"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button></div>
   </div>
   <div id="banners"></div>
 
@@ -210,6 +254,7 @@
       <button type="button" data-track="all" aria-pressed="true">전체</button>
       <button type="button" data-track="C1" aria-pressed="false">평생교육</button>
       <button type="button" data-track="B3" aria-pressed="false">탄소중립</button>
+      <button type="button" data-track="teams" id="teamsTab" aria-pressed="false" hidden>팀즈<span class="badge" id="teamsBadge" hidden></span></button>
     </div>
   </div>
 
@@ -230,6 +275,22 @@
     <div id="agenda"></div>
     <div id="weekview"></div>
     <div id="rangeNote" class="note" style="display:none"></div>
+  </section>
+  <section id="teamsView" aria-label="팀즈 알림">
+    <div class="tv-head">
+      <h2>팀즈 알림</h2>
+      <div class="seg" id="roomSeg" role="group" aria-label="채팅방">
+        <button type="button" data-room="all" aria-pressed="true">전체</button>
+        <button type="button" data-room="chief" aria-pressed="false">앵커사업단 책임</button>
+        <button type="button" data-room="group" aria-pressed="false">앵커사업단 단체팀즈</button>
+      </div>
+      <span class="upd" id="teamsUpd"></span>
+      <button type="button" class="rbtn" id="teamsBtn" title="팀즈 지금 읽어오기" aria-label="팀즈 지금 읽어오기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>
+    </div>
+    <div class="tv-cols">
+      <div class="tv-card"><h3>일정 · 제출 안내</h3><div id="tvItems"></div></div>
+      <div class="tv-card"><h3>최근 메시지</h3><div id="tvMsgs"></div></div>
+    </div>
   </section>
   <footer>출장·연가는 UWIN, 행사는 총괄기획본부·기업지원R&D센터 주간보고 기준입니다. 날짜를 누르면 세부 내용이 열립니다.</footer>
 </main>
@@ -556,6 +617,11 @@
           if (x.desc) lines.push('내용: ' + x.desc);
           if (lines.length) row.appendChild(el('div', 's', lines.join('\n')));
           (x.extra || []).forEach(function (t) { row.appendChild(el('div', 's extra', t)); });
+          if (x.teams) {
+            var src = el('div', 's', '출처: 팀즈 · ' + x.teams.room + ' ');
+            if (x.teams.url) { var ta = el('a', null, '메시지 열기'); ta.href = x.teams.url; ta.target = '_blank'; ta.rel = 'noopener'; ta.style.color = 'var(--brand)'; ta.style.fontWeight = '600'; src.appendChild(ta); }
+            row.appendChild(src);
+          }
         } else {
           var e = it.e;
           t.appendChild(el('span', 'tag ' + it.kind, e.type));
@@ -637,14 +703,61 @@
     });
     return out;
   }
-  function banner(text) { $('banners').appendChild(el('div', 'banner', text)); }
+  // ── 위젯(내 PC 바탕화면 앱)과의 연결: 위젯 안에서 열었을 때만 새로고침 버튼이 보인다 ──
+  var HOST = (window.chrome && window.chrome.webview) || null;
+  function hostSend(cmd) { if (HOST) HOST.postMessage({ cmd: cmd }); }
+  function banner(text, o) {
+    o = o || {};
+    var b = el('div', 'banner' + (o.cls ? ' ' + o.cls : ''), text);
+    if (o.id) b.id = o.id;
+    if (HOST && o.acts && o.acts.length) {
+      var a = el('span', 'acts');
+      o.acts.forEach(function (x) { var bt = el('button', null, x[0]); bt.type = 'button'; bt.addEventListener('click', function () { hostSend(x[1]); }); a.appendChild(bt); });
+      b.appendChild(a);
+    }
+    $('banners').appendChild(b);
+    return b;
+  }
+  function setBusy(btn, on) { btn.classList.toggle('spin', on); btn.disabled = on; }
+  if (HOST) {
+    $('uwinBtn').classList.add('on'); $('teamsBtn').classList.add('on');
+    $('uwinBtn').addEventListener('click', function () { setBusy($('uwinBtn'), true); var o = $('banners').querySelector('#uwinErr'); if (o) o.remove(); hostSend('uwin'); });
+    $('teamsBtn').addEventListener('click', function () { setBusy($('teamsBtn'), true); hostSend('teams'); });
+    HOST.addEventListener('message', function (e) {
+      var d = e.data || {};
+      if (d.cmd === 'uwin' || d.cmd === 'teams') {
+        var btn = d.cmd === 'uwin' ? $('uwinBtn') : $('teamsBtn');
+        if (d.state === 'start') { setBusy(btn, true); return; }
+        setBusy(btn, false);
+        if (d.ok) { try { sessionStorage.setItem('flash', d.cmd === 'uwin' ? 'UWIN 출장·연가를 갱신했습니다.' : '팀즈를 새로 읽어왔습니다.'); } catch (x) {} location.reload(); }
+        else {
+          var old = $('banners').querySelector('#' + d.cmd + 'Err'); if (old) old.remove();
+          banner('⚠ ' + (d.cmd === 'uwin' ? 'UWIN 갱신 실패' : '팀즈 읽기 실패') + ' — ' + (d.message || '알 수 없는 오류'), { id: d.cmd + 'Err', acts: d.cmd === 'uwin' ? errActs(d.fix) : [['다시 시도', 'teams']] });
+        }
+      }
+    });
+  }
+  function errActs(fix) {
+    var a = [['다시 시도', 'uwin']];
+    if (fix === 'login' || fix === 'chrome') a.unshift(['UWIN 열기', 'login']);
+    return a;
+  }
+  try { var fl = sessionStorage.getItem('flash'); if (fl) { sessionStorage.removeItem('flash'); var fb = banner('✓ ' + fl, { cls: 'ok' }); setTimeout(function () { fb.remove(); }, 6000); } } catch (e) {}
 
   Promise.all([
     get('data/uwin.json').catch(function () { return null; }),
     get('data/events.json').catch(function () { return { updatedAt: null, events: [] }; }),
-    get('data/status.json').catch(function () { return null; })
+    get('data/status.json').catch(function () { return null; }),
+    get('data/teams.json').catch(function () { return null; }),     // 내 PC 위젯에서만 존재(공개 사이트에는 올라가지 않음)
+    get('data/teams-status.json').catch(function () { return null; })
   ]).then(function (res) {
-    var uwin = res[0], ev = res[1], status = res[2];
+    var uwin = res[0], ev = res[1], status = res[2], teams = res[3], tstatus = res[4];
+    if (status && status.ok === false) {
+      var fix = status.fix || (/fetch failed/.test(status.code || '') ? 'chrome' : /로그인|조회 화면/.test(status.code || '') ? 'login' : 'retry');
+      var msg = status.message || (fix === 'chrome' ? '조회용 크롬이 꺼져 있어 UWIN에 접속하지 못했습니다.' : fix === 'login' ? 'UWIN 로그인이 풀려 있습니다.' : '조회에 실패했습니다.');
+      if (!HOST) msg = '출장·연가 자동 갱신이 지연되고 있습니다.';   // 공개 사이트에서는 기술적인 원인을 보이지 않는다
+      banner('⚠ UWIN 갱신 실패' + (status.lastAttemptAt ? ' (' + fmtTs(status.lastAttemptAt) + ')' : '') + ' — ' + msg + (uwin ? ' 출장·연가는 ' + fmtTs(uwin.generatedAt) + ' 기준입니다.' : ''), { id: 'uwinErr', acts: errActs(fix) });
+    }
     if (!uwin) {
       pill([{ t: '출장·연가 갱신 ' }, { b: '정보 없음' }], 'stale');
       banner('⚠ 갱신 지연 — 일정 데이터를 불러오지 못했습니다. 표시된 정보가 없거나 오래됐을 수 있습니다.');
@@ -668,7 +781,12 @@
       if (track === 'all' || t == null || t === 'all') return true;
       return Array.isArray(t) ? t.indexOf(track) >= 0 : t === track;
     }
-    var allEvents = (ev.events || []).concat(expandRecurring(ev));
+    // 팀즈에서 뽑은 일정·제출 안내도 달력에 올린다(내 PC 위젯에서만). 모든 보기(전체·평생교육·탄소중립)에 표시.
+    var ROOM_NAME = { chief: '앵커사업단 책임', group: '앵커사업단 단체팀즈' };
+    var teamEvents = ((teams && teams.items) || []).map(function (t) {
+      return { title: (t.kind === 'deadline' ? '[팀즈·마감] ' : '[팀즈] ') + t.title, date: t.date, endDate: t.endDate, time: t.time, track: 'all', desc: t.note, teams: { room: ROOM_NAME[t.room] || t.room, url: t.url } };
+    });
+    var allEvents = (ev.events || []).concat(expandRecurring(ev)).concat(teamEvents);
     var allLeaves = ((uwin && uwin.events) || []).concat(ev.manualLeaves || []);
     function rebuild() {
       items = {}; spans = [];
@@ -690,9 +808,63 @@
         eachDay(x.date, end, function (k) { add(k, { kind: 'event', x: x, sp: sp }); });
       });
     }
+    // ── 팀즈 탭 ──
+    var haveTeams = !!(teams && teams.messages);
+    var room = 'all', seenBefore = '';
+    try { seenBefore = localStorage.getItem('teamsSeen') || ''; } catch (e) {}
+    function newest() { return ((teams && teams.messages) || []).reduce(function (m, x) { return x.at > m ? x.at : m; }, ''); }
+    function unreadCount() { return ((teams && teams.messages) || []).filter(function (x) { return x.at > seenBefore && x.from !== '조인주'; }).length; }
+    if (haveTeams) {
+      $('teamsTab').hidden = false; TRACK_NAME.teams = '팀즈';
+      var uc = unreadCount(); if (uc) { $('teamsBadge').textContent = uc > 99 ? '99+' : String(uc); $('teamsBadge').hidden = false; }
+    }
+    function fmtMsgTime(s) { var d = new Date(s); return pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + ' (' + DOW[d.getDay()] + ') ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+    function renderTeams() {
+      if (!haveTeams) return;
+      $('teamsUpd').textContent = (teams.updatedAt ? '읽은 시각 ' + fmtTs(teams.updatedAt) : '') + (tstatus && tstatus.ok === false ? ' · ⚠ ' + (tstatus.message || '읽기 실패') : '');
+      Array.prototype.forEach.call($('roomSeg').querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-room') === room)); });
+      var flagBy = {}; (teams.items || []).forEach(function (t) { if (t.msgId) flagBy[t.msgId] = t; });
+      var box = $('tvItems'); box.textContent = '';
+      var its = (teams.items || []).filter(function (t) { return room === 'all' || t.room === room; }).sort(function (a, b) { return a.date.localeCompare(b.date); });
+      if (!its.length) box.appendChild(el('div', 'tv-empty', '날짜가 있는 일정·제출 안내가 없습니다.'));
+      its.forEach(function (t) {
+        var b = el('button', 'tv-item'); b.type = 'button';
+        b.appendChild(el('div', 'd', md(t.date) + (t.endDate && t.endDate !== t.date ? '~' + md(t.endDate) : '') + (t.time ? ' ' + t.time : '') + ' · ' + (ROOM_NAME[t.room] || '')));
+        var tt = el('div', 't'); tt.appendChild(el('span', 'k' + (t.kind === 'deadline' ? ' deadline' : ''), t.kind === 'deadline' ? '마감' : '일정')); tt.appendChild(document.createTextNode(t.title)); b.appendChild(tt);
+        b.addEventListener('click', function () { setTrack('all'); var dd = new Date(t.date + 'T12:00:00'); view.y = dd.getFullYear(); view.m = dd.getMonth(); weekStart = sundayOf(t.date); render(); openDrawer(t.date); });
+        box.appendChild(b);
+      });
+      var mb = $('tvMsgs'); mb.textContent = '';
+      var ms = (teams.messages || []).filter(function (m) { return room === 'all' || m.room === room; }).slice(0, 80);
+      if (!ms.length) mb.appendChild(el('div', 'tv-empty', '메시지가 없습니다.'));
+      ms.forEach(function (m) {
+        var w = el('div', 'tv-msg'), h = el('div', 'h');
+        if (m.at > seenBefore && m.from !== '조인주') h.appendChild(el('i', 'new'));
+        h.appendChild(el('b', null, m.from)); h.appendChild(document.createTextNode(fmtMsgTime(m.at))); h.appendChild(el('span', 'room', ROOM_NAME[m.room] || m.room));
+        var fl = flagBy[m.id]; if (fl) h.appendChild(el('span', 'flag' + (fl.kind === 'deadline' ? ' deadline' : ''), fl.kind === 'deadline' ? '제출·마감 ' + md(fl.date) : '일정 ' + md(fl.date)));
+        w.appendChild(h);
+        var x = el('div', 'x', m.text || ''); w.appendChild(x);
+        if ((m.text || '').length > 160 || (m.text || '').split('\n').length > 5) { var mo = el('button', 'more', '더보기'); mo.type = 'button'; mo.addEventListener('click', function () { var o = x.classList.toggle('open'); mo.textContent = o ? '접기' : '더보기'; }); w.appendChild(mo); }
+        if (m.url) { var a = el('a', null, '팀즈에서 열기'); a.href = m.url; a.target = '_blank'; a.rel = 'noopener'; w.appendChild(a); }
+        mb.appendChild(w);
+      });
+    }
+    Array.prototype.forEach.call($('roomSeg').querySelectorAll('button'), function (b) { b.addEventListener('click', function () { room = b.getAttribute('data-room'); renderTeams(); }); });
     function setTrack(t, keepOpen) {
+      if (t === 'teams' && !haveTeams) t = 'all';
+      var wasTeams = track === 'teams';
       track = t; try { localStorage.setItem('track', t); } catch (e) {}
       Array.prototype.forEach.call($('trackSeg').querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-track') === t)); });
+      var isT = t === 'teams';
+      document.querySelector('.calcard').style.display = isT ? 'none' : '';
+      $('teamsView').classList.toggle('on', isT);
+      if (isT) {
+        renderTeams();
+        var n = newest(); if (n) { try { localStorage.setItem('teamsSeen', n); } catch (e) {} }   // 열어서 본 것으로 처리(이번 화면에서는 새 글 표시를 유지)
+        $('teamsBadge').hidden = true; closeDrawer();
+        return;
+      }
+      if (wasTeams) { var n2 = newest(); if (n2) seenBefore = n2; }
       rebuild(); render();
     }
     Array.prototype.forEach.call($('trackSeg').querySelectorAll('button'), function (b) {
