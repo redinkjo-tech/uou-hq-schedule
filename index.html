@@ -8,26 +8,26 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
   :root {
-    --bg:#e3e7f2; --panel:#f1f3ff; --card:#ffffff; --ink:#1d1a3f; --muted:#7b809c; --line:#e7e9f6; --soft:#f3f4ff;
-    --brand:#5a49c9; --brand-soft:#e9e5ff; --today-line:#5a49c9;
-    --trip:#21b8c4; --trip-ink:#ffffff;
-    --leave:#ffeadb; --leave-ink:#a4511b; --leave-line:#ffd0b0;
-    --event:#ebe8ff; --event-ink:#4a3cb8; --event-line:#6a5acd;
-    --warn-bg:#ffe9ee; --warn:#d0364f; --sun:#e0566b; --sat:#5a7be6;
-    --scrim:rgba(24,20,60,.42); --shadow:0 2px 6px rgba(80,70,160,.06), 0 14px 34px rgba(80,70,160,.09);
-    --c-trip:#2cc8d2; --c-leave:#ff9a62; --c-event:#6a58d6;
-    --t-trip:rgba(44,200,210,.16); --t-leave:rgba(255,154,98,.18); --t-event:rgba(106,88,214,.12);
+    --bg:#f7f0dd; --panel:transparent; --card:#fffdf6; --ink:#141414; --muted:#8a846f; --line:#ebe3cd; --soft:#f1e9d3;
+    --brand:#141414; --brand-soft:#efe7d1; --today-line:#141414;
+    --trip:#b9c9f3; --trip-ink:#141414;
+    --leave:#e9e2d2; --leave-ink:#141414; --leave-line:#d8cfb8;
+    --event:#f6d85c; --event-ink:#141414; --event-line:#d9b800;
+    --warn-bg:#ffe3e0; --warn:#c8372d; --sun:#e0759f; --sat:#6b86d6;
+    --scrim:rgba(20,18,10,.42); --shadow:0 1px 2px rgba(60,50,20,.05), 0 10px 28px rgba(60,50,20,.07);
+    --c-trip:#7f9be6; --c-leave:#b3a784; --c-event:#e2b800; --c-teams:#e66bb0;
+    --t-trip:#b9c9f3; --t-leave:#e9e2d2; --t-event:#f6d85c; --t-teams:#f6b9dc;
   }
   @media (prefers-color-scheme: dark) { :root {
-    --bg:#0e0d22; --panel:#161432; --card:#1e1c40; --ink:#eeeefc; --muted:#9a9cc4; --line:#2d2b56; --soft:#262449;
-    --brand:#a89bff; --brand-soft:#2f2b66; --today-line:#a89bff;
-    --trip:#2bc2cc; --trip-ink:#02262a;
-    --leave:#3d2a1c; --leave-ink:#ffc9a3; --leave-line:#6a4630;
-    --event:#2c2763; --event-ink:#cfc8ff; --event-line:#a597ff;
-    --warn-bg:#3a1c28; --warn:#ff8da1; --sun:#ff8da1; --sat:#9db4ff;
-    --scrim:rgba(0,0,0,.6); --shadow:0 2px 6px rgba(0,0,0,.3), 0 14px 34px rgba(0,0,0,.3);
-    --c-trip:#52dbe4; --c-leave:#ffb184; --c-event:#a597ff;
-    --t-trip:rgba(82,219,228,.2); --t-leave:rgba(255,177,132,.2); --t-event:rgba(165,151,255,.24);
+    --bg:#12110d; --panel:transparent; --card:#201e18; --ink:#f4efe2; --muted:#a39d88; --line:#34312a; --soft:#2a2822;
+    --brand:#f4efe2; --brand-soft:#34312a; --today-line:#f4efe2;
+    --trip:#3a4a80; --trip-ink:#f4efe2;
+    --leave:#3a362c; --leave-ink:#f4efe2; --leave-line:#4d483b;
+    --event:#7a6612; --event-ink:#f4efe2; --event-line:#e2b800;
+    --warn-bg:#3d1e1b; --warn:#ff9a90; --sun:#ff8fb6; --sat:#9db4ff;
+    --scrim:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.3);
+    --c-trip:#7f9be6; --c-leave:#a39d88; --c-event:#e2b800; --c-teams:#ff8fc8;
+    --t-trip:#3a4a80; --t-leave:#3a362c; --t-event:#7a6612; --t-teams:#7a3a62;
   } }
   * { box-sizing:border-box; }
   html, body { overflow-x:hidden; }
@@ -242,73 +242,145 @@
   @media (max-width:900px) { .wv-row { grid-template-columns:36px minmax(0,1fr); } .tb { font-size:11px; padding-left:6px; } .wv-day b { min-width:26px; height:26px; font-size:14px; } }
   @media (prefers-reduced-motion: reduce) { .drawer, .scrim { transition:none; } }
 
-  /* ── 테마: 라벤더·인디고 (레퍼런스 이미지 기반) ── */
+  /* ── 테마: 크림 + 블랙 사이드바 (레퍼런스 2) ── */
+  .teams { --c:var(--c-teams); --t:var(--t-teams); }
   body { background:var(--bg); }
-  main { min-height:calc(100vh - 32px); background:var(--panel); border-radius:32px; margin:16px auto; padding:34px 36px 44px; max-width:1280px; box-shadow:0 20px 50px rgba(80,70,160,.12); }
-  h1 { font-size:36px; font-weight:800; letter-spacing:-0.04em; }
-  .tagline { margin-top:6px; font-size:12.5px; font-weight:700; letter-spacing:.05em; color:var(--muted); }
-  .pill { border:0; border-radius:14px; padding:8px 15px; font-weight:500; }
-  .dot { background:#5ad6a2; }
-  .banner { border-radius:16px; }
-  .rbtn { background:var(--brand); color:#fff; border:0; width:36px; height:36px; box-shadow:0 8px 18px rgba(90,73,201,.35); }
-  .rbtn:hover { color:#fff; filter:brightness(1.08); }
-  .seg { background:var(--card); border:0; border-radius:16px; padding:4px; gap:4px; box-shadow:var(--shadow); }
-  .seg button { border-radius:12px; color:var(--muted); }
-  .seg button:hover:not([aria-pressed="true"]) { background:var(--soft); color:var(--ink); }
-  .seg button[aria-pressed="true"] { background:var(--brand); color:#fff; box-shadow:0 8px 18px rgba(90,73,201,.32); }
-  .trackbar .seg button { height:40px; padding:0 20px; }
-  .calcard, .tv-card { border:0; border-radius:26px; box-shadow:var(--shadow); }
-  .calcard { padding:22px 22px 16px; }
-  .bar-head h2, .tv-head h2 { font-size:26px; letter-spacing:-0.04em; }
-  .nav { background:var(--soft); border:0; border-radius:14px; }
-  .nav button { border-radius:11px; }
+  .app { display:flex; gap:20px; min-height:100vh; padding:16px; align-items:flex-start; }
+  main { flex:1; min-width:0; max-width:none; margin:0; padding:14px 10px 40px 4px; background:none; box-shadow:none; border-radius:0; min-height:0; }
+  .side { width:216px; flex:none; background:#111; color:#e8e8e8; border-radius:30px; padding:28px 16px 22px; position:sticky; top:16px; height:calc(100vh - 32px); display:flex; flex-direction:column; gap:4px; overflow:auto; }
+  .brand { padding:0 10px 6px; } .brand b { display:block; font-size:22px; color:#fff; letter-spacing:-0.04em; } .brand span { font-size:10.5px; letter-spacing:.14em; color:#808080; }
+  .side-label { font-size:11.5px; color:#7d7d7d; margin:20px 10px 6px; }
+  .side .seg { display:flex; flex-direction:column; background:transparent; box-shadow:none; padding:0; gap:2px; border-radius:0; }
+  .side .seg button { display:flex; align-items:center; gap:11px; height:44px; padding:0 12px; border-radius:13px; color:#bdbdbd; font-size:14px; font-weight:600; text-align:left; box-shadow:none; background:transparent; }
+  .side .seg button svg { width:18px; height:18px; flex:none; }
+  .side .seg button:hover:not([aria-pressed="true"]) { background:#1d1d1d; color:#fff; }
+  .side .seg button[aria-pressed="true"] { background:#222; color:#fff; box-shadow:inset 0 0 0 1.5px #f6b9dc; }
+  .seg button .badge { background:#f6b9dc; color:#111; margin-left:auto; }
+  .side .pills { flex-direction:column; align-items:stretch; gap:8px; }
+  .side .pill { background:#1b1b1b; color:#a8a8a8; border-radius:13px; box-shadow:none; padding:9px 12px; font-size:12px; line-height:1.35; }
+  .side .pill b { color:#fff; }
+  .side .pill.stale { color:#ff9a90; }
+  .rbtn { background:#111; color:#fff; border:0; width:34px; height:34px; box-shadow:none; }
+  .rbtn:hover { color:#fff; filter:brightness(1.3); }
+  .side .rbtn { width:100%; height:44px; border-radius:13px; background:#f6d85c; color:#111; justify-content:flex-start; padding:0 13px; gap:10px; order:-1; }
+  .side .rbtn::after { content:attr(data-label); font-size:13.5px; font-weight:800; }
+  .side .rbtn:hover { color:#111; filter:brightness(1.05); }
+  .top { margin:6px 0 26px; }
+  h1 { font-size:42px; line-height:1.12; font-weight:800; letter-spacing:-0.045em; }
+  .tagline { margin-top:10px; font-size:13.5px; font-weight:500; letter-spacing:0; color:var(--muted); }
+  .banner { border-radius:18px; }
+  .calcard { background:none; border:0; box-shadow:none; padding:0; }
+  .bar-head { gap:10px; margin-bottom:16px; }
+  .bar-head h2 { flex:none; font-size:15px; font-weight:700; letter-spacing:-0.01em; background:#111; color:#fff; padding:9px 18px; border-radius:999px; min-width:0; }
+  .legend { margin-left:auto; }
+  .legend i { width:10px; height:10px; border-radius:50%; }
+  .legend .l-trip { background:var(--c-trip); } .legend .l-leave { background:var(--c-leave); } .legend .l-event { background:var(--c-event); } .legend .l-teams { background:var(--c-teams); }
+  .seg { background:var(--soft); border:0; border-radius:999px; padding:3px; gap:2px; box-shadow:none; }
+  .seg button { border-radius:999px; height:30px; color:var(--muted); }
+  .seg button[aria-pressed="true"] { background:#111; color:#fff; box-shadow:none; }
+  .nav { background:var(--soft); border:0; border-radius:999px; }
+  .nav button { border-radius:999px; }
   .nav button:hover:not(:disabled) { background:var(--card); }
-  .nav .todaybtn { color:var(--brand); }
-  .dow div { font-size:11.5px; letter-spacing:.06em; color:var(--muted); }
-  .dow { border-bottom-color:var(--line); }
-  .num.today span { background:var(--brand); color:#fff; box-shadow:none; }
-  .wv-day.today b { background:var(--brand); color:#fff; box-shadow:none; }
-  .cell:hover { background:var(--soft); }
-  .bar, .chip, .tb { border-radius:8px; }
-  .bar::before, .chip::before { width:4px; border-radius:4px; }
+  .nav .todaybtn { color:var(--ink); }
+  .dow { border:0; margin-bottom:6px; }
+  .dow div { background:var(--card); border-radius:16px; margin:0 3px; padding:13px 0; font-size:13px; letter-spacing:.02em; color:var(--ink); box-shadow:var(--shadow); }
+  .dow div:first-child { color:var(--sun); } .dow div:last-child { color:var(--sat); }
+  .week { border-bottom:0; min-height:132px; }
+  .cellbg .cell { margin:3px; border-radius:20px; background:var(--soft); border-right:0; }
+  .cellbg .cell.blank { background:transparent !important; }
+  .cell:hover { background:#ebe1c6; }
+  .cell.selected { box-shadow:inset 0 0 0 2px #111; }
+  .cell.today { background:var(--card); box-shadow:inset 0 0 0 2px #111; }
+  .num { padding:10px 0 2px 14px; }
+  .num.today span { background:#111; color:#fff; box-shadow:none; }
+  .wv-day.today b { background:#111; color:#fff; box-shadow:none; }
+  .bar { --m:9px; border-radius:14px; padding:6px 11px; font-weight:600; line-height:1.3; color:var(--ink); }
+  .bar::before, .chip::before, .tb::before { display:none; }
   .bar.cl { border-top-left-radius:0; border-bottom-left-radius:0; }
   .bar.cr { border-top-right-radius:0; border-bottom-right-radius:0; }
-  .legend i { border-radius:4px; }
-  .daycard { border:0; border-radius:18px; }
-  .item { border:0; border-radius:16px; }
-  .drawer { border-radius:28px 0 0 28px; }
-  .drawer header button { background:var(--soft); }
+  .tb { border-radius:14px; padding:6px 9px; border:0; font-weight:600; }
+  .chip, .daycard .chip { border-radius:14px; font-weight:600; }
+  .daycard { border:0; border-radius:20px; }
+  .wv-col, .wv-day { border-color:var(--line); }
+  .tv-card { border:0; border-radius:26px; box-shadow:var(--shadow); background:var(--card); }
+  .tv-head h2 { font-size:22px; letter-spacing:-0.04em; }
   .tv-item { border-radius:16px; }
-  .tv-item .ok { color:var(--brand); }
-  .tv-msg .flag, .tv-item .k { background:var(--event); color:var(--event-ink); }
-  .tv-msg a { color:var(--brand); }
-  @media (max-width:900px) { main { margin:8px; padding:22px 16px 34px; border-radius:24px; } }
+  .tv-item .ok { color:var(--ink); }
+  .tv-msg a { color:var(--ink); text-decoration:underline; }
+  .tv-item .k, .tv-msg .flag { background:var(--event); color:var(--event-ink); }
+  .drawer { border-radius:28px 0 0 28px; background:var(--card); }
+  .item { border:0; border-radius:18px; }
+  .tag.trip, .tag.leave { background:var(--t); color:var(--ink); box-shadow:none; }
+  .sec h4::before { display:none; }
+  /* 세로 모니터·작은 창(보이는 폭 약 1100px 이하): 사이드바를 아이콘만 있는 얇은 띠로 */
+  @media (max-width:1100px) {
+    .app { gap:12px; padding:10px; }
+    main { padding:10px 4px 30px 0; }
+    .side { width:84px; padding:18px 10px 16px; align-items:center; border-radius:26px; top:10px; height:calc(100vh - 20px); }
+    .side .brand, .side .side-label { display:none; }
+    .side .seg { width:100%; align-items:center; }
+    .side .seg button { font-size:0; width:56px; height:50px; padding:0; justify-content:center; position:relative; gap:0; border-radius:16px; }
+    .side .seg button svg { width:22px; height:22px; }
+    .side .seg button .badge { position:absolute; top:3px; right:2px; font-size:10.5px; margin:0; min-width:17px; height:17px; line-height:17px; padding:0 4px; }
+    .side .rbtn { width:56px; height:50px; padding:0; justify-content:center; border-radius:16px; order:-1; margin-bottom:10px; }
+    .side .rbtn::after { display:none; }
+    .side .pills { align-items:center; margin-top:auto; gap:6px; width:100%; }
+    .side .pill { font-size:0; width:100%; padding:8px 2px; display:flex; flex-direction:column; align-items:center; gap:3px; border-radius:12px; }
+    .side .pill b { font-size:10.5px; line-height:1.25; text-align:center; word-break:keep-all; }
+    .side .pill .dot { width:6px; height:6px; }
+    h1 { font-size:34px; }
+    .bar { font-size:12px; padding:5px 8px; --m:7px; }
+    .dow div { margin:0 2px; padding:11px 0; }
+    .cellbg .cell { margin:2px; border-radius:16px; }
+    .bar-head { gap:8px; }
+    .bar-head h2 { padding:8px 15px; }
+  }
+  /* 휴대폰 */
+  @media (max-width:640px) {
+    .app { flex-direction:column; padding:8px; gap:10px; align-items:stretch; }
+    .side { width:auto; position:static; height:auto; flex-direction:row; flex-wrap:wrap; align-items:center; border-radius:22px; padding:12px; gap:8px; }
+    .side .seg { flex-direction:row; flex-wrap:wrap; width:auto; display:flex; }
+    .side .seg button { font-size:13px; width:auto; padding:0 12px; height:40px; gap:7px; }
+    .side .seg button svg { width:17px; height:17px; }
+    .side .seg button .badge { position:static; }
+    .side .rbtn { order:0; width:44px; margin:0; }
+    .side .pills { flex-direction:row; flex-wrap:wrap; flex:1; margin-top:0; }
+    .side .pill { font-size:11.5px; width:auto; flex-direction:row; }
+    .side .pill b { font-size:11.5px; }
+    main { padding:6px 2px 30px; }
+    h1 { font-size:28px; }
+  }
 </style>
 </head>
 <body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><b>센터 일정판</b><span>CENTER SCHEDULE</span></div>
+  <div class="side-label">보기</div>
+  <div class="seg" id="trackSeg" role="group" aria-label="일정 구분">
+      <button title="전체" type="button" data-track="all" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>전체</button>
+      <button title="평생교육" type="button" data-track="C1" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>평생교육</button>
+      <button title="탄소중립" type="button" data-track="B3" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-14 14z"/><path d="M5 19 13 11"/></svg>탄소중립</button>
+      <button title="팀즈" type="button" data-track="teams" id="teamsTab" aria-pressed="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>팀즈<span class="badge" id="teamsBadge" hidden></span></button>
+    </div>
+  <div class="side-label">도구 · 상태</div>
+  <div class="pills" id="pills"><button type="button" class="rbtn" id="uwinBtn" data-label="UWIN 새로고침" title="UWIN 출장·연가 지금 갱신" aria-label="UWIN 출장·연가 지금 갱신"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button></div>
+</aside>
 <main>
   <div class="top">
     <div>
-      <h1>센터 일정판</h1>
+      <h1>센터 일정을<br>한눈에 확인하세요</h1>
       <p class="tagline">평생교육 · 탄소중립 — 출장 · 연가 · 행사를 한눈에</p>
     </div>
-    <div class="pills" id="pills"><button type="button" class="rbtn" id="uwinBtn" title="UWIN 출장·연가 지금 갱신" aria-label="UWIN 출장·연가 지금 갱신"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button></div>
+    
   </div>
   <div id="banners"></div>
 
-  <div class="trackbar">
-    <div class="seg" id="trackSeg" role="group" aria-label="일정 구분">
-      <button type="button" data-track="all" aria-pressed="true">전체</button>
-      <button type="button" data-track="C1" aria-pressed="false">평생교육</button>
-      <button type="button" data-track="B3" aria-pressed="false">탄소중립</button>
-      <button type="button" data-track="teams" id="teamsTab" aria-pressed="false" hidden>팀즈<span class="badge" id="teamsBadge" hidden></span></button>
-    </div>
-  </div>
 
   <section class="calcard">
     <div class="bar-head">
       <h2 id="title"></h2>
-      <div class="legend"><span><i class="l-trip"></i>출장</span><span><i class="l-leave"></i>연가·기타</span><span><i class="l-event"></i>행사</span></div>
+      <div class="legend"><span><i class="l-trip"></i>출장</span><span><i class="l-leave"></i>연가·기타</span><span><i class="l-event"></i>행사</span><span id="lgTeams" hidden><i class="l-teams"></i>팀즈</span></div>
       <div class="seg" role="group" aria-label="보기 방식"><button id="vMonth" aria-pressed="true">월간</button><button id="vWeek" aria-pressed="false">주간</button></div>
       <label class="tt" id="ttWrap"><input type="checkbox" id="ttOn"><span id="ttLabel">시간표</span></label>
       <div class="nav">
@@ -340,6 +412,7 @@
     </div>
   </section>
 </main>
+</div>
 
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle" aria-hidden="true">
@@ -513,7 +586,7 @@
       });
       flush();
       list.forEach(function (x) {
-        var blk = el('div', 'tb ' + x.it.kind); blk.setAttribute('data-date', k);
+        var blk = el('div', 'tb ' + x.it.kind + (x.it.sp.teams ? ' teams' : '')); blk.setAttribute('data-date', k);
         blk.textContent = x.it.sp.label;
         blk.appendChild(el('small', null, x.it.sp.time));
         blk.style.top = ((x.s - hs * 60) * PX / 60) + 'px';
@@ -593,7 +666,7 @@
         // 옆 칸과 줄을 맞추지 않고, 각 날짜 칸 안에서 위에서부터 붙여 쌓는다 (여러 날 막대는 걸치는 칸 중 가장 아래 기준)
         var colBottom = [0, 0, 0, 0, 0, 0, 0], GAP = 3, maxBottom = 0;
         pending.forEach(function (sg) {
-          var b = el('div', 'bar ' + sg.sp.kind + (sg.sp.start !== sg.sp.end ? ' multi' : '') + (sg.cl ? ' cl' : '') + (sg.cr ? ' cr' : ''), spanLabel(sg.sp));
+          var b = el('div', 'bar ' + sg.sp.kind + (sg.sp.teams ? ' teams' : '') + (sg.sp.start !== sg.sp.end ? ' multi' : '') + (sg.cl ? ' cl' : '') + (sg.cr ? ' cr' : ''), spanLabel(sg.sp));
           b.style.left = 'calc(' + (sg.cs * 100 / 7) + '% + ' + (sg.cl ? '0px' : 'var(--m)') + ')';
           b.style.width = 'calc(' + ((sg.ce - sg.cs + 1) * 100 / 7) + '% - ' + (sg.cl ? '0px' : 'var(--m)') + ' - ' + (sg.cr ? '0px' : 'var(--m)') + ')';
           b.title = spanLabel(sg.sp) + (sg.sp.range ? ' (' + sg.sp.range + ')' : '');
@@ -627,7 +700,7 @@
       if (k2 === todayIso) dh.appendChild(el('span', 'tdy', '오늘'));
       card.appendChild(dh);
       l2.concat(going).forEach(function (it) {
-        var chip = el('span', 'chip ' + it.kind, spanLabel(it.sp));
+        var chip = el('span', 'chip ' + it.kind + (it.sp.teams ? ' teams' : ''), spanLabel(it.sp));
         var extra = it.sp.range ? it.sp.range + (going.indexOf(it) >= 0 ? ' · 진행 중' : '') : '';
         if (extra) chip.appendChild(el('small', null, extra));
         card.appendChild(chip);
@@ -849,7 +922,7 @@
       events.forEach(function (x) {
         var end = x.endDate || x.date;
         var tag = track === 'all' && TRACK_TAG[x.track] ? TRACK_TAG[x.track] : '';
-        var sp = { kind: 'event', start: x.date, end: end, label: tag + x.title, time: x.time || '', range: end !== x.date ? md(x.date) + '~' + md(end) : '' };
+        var sp = { kind: 'event', teams: !!x.teams, start: x.date, end: end, label: tag + x.title, time: x.time || '', range: end !== x.date ? md(x.date) + '~' + md(end) : '' };
         spans.push(sp);
         eachDay(x.date, end, function (k) { add(k, { kind: 'event', x: x, sp: sp }); });
       });
@@ -861,7 +934,7 @@
     function newest() { return ((teams && teams.messages) || []).reduce(function (m, x) { return x.at > m ? x.at : m; }, ''); }
     function unreadCount() { return ((teams && teams.messages) || []).filter(function (x) { return x.at > seenBefore && x.from !== '조인주'; }).length; }
     if (haveTeams) {
-      $('teamsTab').hidden = false; TRACK_NAME.teams = '팀즈';
+      $('teamsTab').hidden = false; $('lgTeams').hidden = false; TRACK_NAME.teams = '팀즈';
       var uc = unreadCount(); if (uc) { $('teamsBadge').textContent = uc > 99 ? '99+' : String(uc); $('teamsBadge').hidden = false; }
     }
     function fmtMsgTime(s) { var d = new Date(s); return pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + ' (' + DOW[d.getDay()] + ') ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
